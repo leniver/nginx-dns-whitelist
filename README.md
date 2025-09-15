@@ -324,5 +324,3 @@ Avoid mounting the Docker socket. If you must, use:
 # volumes:
 #   - /var/run/docker.sock:/var/run/docker.sock
 ```
-
-This README is intended to be copy-paste ready. If you want, I can open a PR with it in the repo.
