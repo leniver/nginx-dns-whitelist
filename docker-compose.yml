@@ -8,7 +8,8 @@ services:
     environment:
       - RELOADER_WATCH_DIRS=/etc/nginx/whitelists /etc/nginx/conf.d /etc/letsencrypt/live
       - RELOADER_PERIODIC_SECONDS=21600
-      - RELOADER_DEBOUNCE_SECS=2
+      - RELOADER_DEBOUNCE_SECS=10
+      - RELOADER_SLEEP_SECS=2
       - RELOADER_COOLDOWN=20
       # set to true if you want the container to exit when a listed dir is missing
       - RELOADER_REQUIRE_DIRS=false

@@ -3,7 +3,8 @@ set -eu
 
 RELOADER_WATCH_DIRS="${RELOADER_WATCH_DIRS:-/etc/nginx/whitelists /etc/nginx/conf.d /etc/letsencrypt/live}"
 RELOADER_PERIODIC_SECONDS="${RELOADER_PERIODIC_SECONDS:-21600}"  # 6h
-RELOADER_DEBOUNCE_SECS="${RELOADER_DEBOUNCE_SECS:-2}"
+RELOADER_DEBOUNCE_SECS="${RELOADER_DEBOUNCE_SECS:-10}"
+RELOADER_SLEEP_SECS="${RELOADER_SLEEP_SECS:-2}"
 RELOADER_COOLDOWN="${RELOADER_COOLDOWN:-20}"                      # min seconds between reloads
 RELOADER_REQUIRE_DIRS="${RELOADER_REQUIRE_DIRS:-false}"          # exit if any listed path is missing
 
@@ -19,6 +20,7 @@ reload_nginx() {
     return 0
   fi
   log "reloading..."
+  sleep "$RELOADER_SLEEP_SECS"
 
   now=$(date +%s); last=0
   [ -f "$stamp" ] && last=$(cat "$stamp" || echo 0)
