@@ -1,0 +1,29 @@
+[
+  {
+    "out": "/whitelists/admin.conf",
+    "hosts": [
+      "admin.example.net",
+      "172.23.0.1",
+      "192.168.1.10",
+      "192.0.2.0/24",
+      "2001:470:1f13:abcd::/64"
+    ],
+    "ipv6": true,
+    "deny_all": true,
+    "reload": { "container": "nginx" }
+  },
+  {
+    "out": "/whitelists/api.conf",
+    "hosts": ["other.example.net"],
+    "ipv6": false,
+    "deny_all": true,
+    "reload": { "container": "nginx" }
+  },
+  {
+    "out": "/whitelists/deny_all.conf",
+    "hosts": [],
+    "ipv6": false,
+    "deny_all": true,
+    "reload": { "container": "nginx" }
+  }
+]

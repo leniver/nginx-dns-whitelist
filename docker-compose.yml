@@ -1,0 +1,36 @@
+volumes:
+  whitelists:
+
+services:
+  nginx:
+    image: nginx:alpine
+    command: ["/bin/sh","-lc","/scripts/entrypoint.sh"]
+    environment:
+      - RELOADER_WATCH_DIRS=/etc/nginx/whitelists /etc/nginx/conf.d /etc/letsencrypt/live
+      - RELOADER_PERIODIC_SECONDS=21600
+      - RELOADER_DEBOUNCE_SECS=2
+      - RELOADER_COOLDOWN=20
+      # set to true if you want the container to exit when a listed dir is missing
+      - RELOADER_REQUIRE_DIRS=false
+    volumes:
+      - whitelists:/etc/nginx/whitelists
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/scripts:/scripts:ro
+      - ./nginx/www:/usr/share/nginx/html
+    ports:
+      - "8080:80"
+
+  whitelist-updater:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - TZ=Europe/Zurich
+      - RUN_EVERY=*/5 * * * *
+      # For security reason, it's better to reload nginx with the nginx/entrypoint.sh
+      #- DOCKER_SOCK=/var/run/docker.sock
+    volumes:
+      - whitelists:/whitelists
+      - ./config/targets.json:/config/targets.json:ro
+      # For security reason, it's better to reload nginx with the nginx/entrypoint.sh
+      #- /var/run/docker.sock:/var/run/docker.sock
