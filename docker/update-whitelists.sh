@@ -30,7 +30,7 @@ reload_notice() {
     else
       err "container ${container} not found via Docker socket (${action})"
     fi
-  } else
+  else
     log "no DOCKER_SOCK provided or not a socket (${action}). Assuming external script handles nginx reload."
   fi
 }
