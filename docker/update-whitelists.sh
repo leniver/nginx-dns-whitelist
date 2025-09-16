@@ -117,3 +117,5 @@ jq -c '.[]' "$CONFIG" | while read -r item; do
     rm -f "$TMP"
   fi
 done
+
+date +%s > /tmp/update-whitelists.ok
