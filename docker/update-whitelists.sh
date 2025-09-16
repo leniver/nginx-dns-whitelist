@@ -4,8 +4,10 @@ set -euo pipefail
 CONFIG="/config/targets.json"
 SOCK="${DOCKER_SOCK:-}"   # optional
 
-log(){ echo "[whitelist] $*"; }
-err(){ echo "[whitelist][error] $*" >&2; }
+ts() { date '+%Y-%m-%dT%H:%M:%S%z'; }
+
+log() { printf '%s [whitelist] %s\n' "$(ts)" "$*"; }
+err() { printf '%s [whitelist][error] %s\n' "$(ts)" "$*" >&2; }
 
 # IPv4, IPv6, with optional CIDR
 ip_or_cidr_re='^([0-9]{1,3}\.){3}[0-9]{1,3}(/[0-9]{1,2})?$|^[0-9A-Fa-f:]+(/[0-9]{1,3})?$'
