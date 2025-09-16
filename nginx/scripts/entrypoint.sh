@@ -2,6 +2,7 @@
 set -eu
 
 RELOADER_WATCH_DIRS="${RELOADER_WATCH_DIRS:-/etc/nginx/whitelists /etc/nginx/conf.d /etc/letsencrypt/live}"
+RELOADER_WATCH_EXTS="${RELOADER_WATCH_EXTS:-.conf .pem}"
 RELOADER_PERIODIC_SECONDS="${RELOADER_PERIODIC_SECONDS:-21600}"  # 6h
 RELOADER_DEBOUNCE_SECS="${RELOADER_DEBOUNCE_SECS:-10}"
 RELOADER_SLEEP_SECS="${RELOADER_SLEEP_SECS:-2}"
@@ -66,11 +67,24 @@ fi
 
 # Polling fallback: hash directory listings and compare
 if [ -n "$LIST" ]; then
-  log "polling for changes every ${RELOADER_DEBOUNCE_SECS}s"
+  log "polling for changes every ${RELOADER_DEBOUNCE_SECS}s (exts: $RELOADER_WATCH_EXTS)"
   hash_dirs() {
+    PRED=""
+    for e in $RELOADER_WATCH_EXTS; do
+      case "$e" in
+        .* ) pat="*${e}" ;;   # ".conf" -> "*.conf"
+        *  ) pat="*.${e}" ;;  # "conf"  -> "*.conf"
+      esac
+      if [ -z "$PRED" ]; then
+        PRED="-name '$pat'"
+      else
+        PRED="$PRED -o -name '$pat'"
+      fi
+    done
+
     # Portable hash using find + ls + md5sum
     # shellcheck disable=SC2086
-    find $LIST -type f 2>/dev/null -print0 \
+    eval "find $LIST -type f \( $PRED \) 2>/dev/null -print0" \
       | xargs -0 ls -ld 2>/dev/null \
       | md5sum | awk '{print $1}'
   }

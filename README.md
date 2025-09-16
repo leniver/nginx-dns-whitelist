@@ -179,6 +179,11 @@ If you really want the updater to send SIGHUP to the Nginx container:
   Space separated list of directories to watch for changes.
   Default: `/etc/nginx/whitelists /etc/nginx/conf.d /etc/letsencrypt/live`
 
+* `RELOADER_WATCH_EXTS`
+  Space separated list of file extensions to include when checking for changes.
+  You can write them with or without the leading dot.
+  Default: .conf .pem
+
 * `RELOADER_PERIODIC_SECONDS`
   Periodic safety reload even if no changes were detected.
   Default: `21600` (6 hours)
