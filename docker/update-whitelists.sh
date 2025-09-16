@@ -50,6 +50,16 @@ if [[ ! -f "$CONFIG" ]]; then
   exit 1
 fi
 
+HASH_FILE="/tmp/whitelist.hash"
+CURR_HASH="$(md5sum "$CONFIG" | awk '{print $1}';)"
+PREV_HASH="$(cat "$HASH_FILE" 2>/dev/null || true)"
+
+if [[ "$CURR_HASH" == "$PREV_HASH" ]]; then
+  date +%s > /tmp/update-whitelists.ok
+  log "no change in $CONFIG, skipping"
+  exit 0
+fi
+
 jq -c '.[]' "$CONFIG" | while read -r item; do
   OUT=$(jq -r '.out' <<<"$item")
   IPV6=$(jq -r '.ipv6 // false' <<<"$item")
@@ -120,4 +130,5 @@ jq -c '.[]' "$CONFIG" | while read -r item; do
   fi
 done
 
+echo "$CURR_HASH" > "$HASH_FILE"
 date +%s > /tmp/update-whitelists.ok
