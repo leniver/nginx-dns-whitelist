@@ -32,7 +32,7 @@ services:
       #- DOCKER_SOCK=/var/run/docker.sock
     volumes:
       - whitelists:/whitelists
-      - ./config/targets.json:/config/targets.json:ro
+      - ./config:/config
       # For security reason, it's better to reload nginx with the nginx/entrypoint.sh
       #- /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
