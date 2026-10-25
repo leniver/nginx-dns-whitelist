@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM alpine:3.24
 
 # bash, cron, dig, jq, curl, tzdata
 RUN apk add --no-cache bash busybox-suid bind-tools jq curl tzdata
