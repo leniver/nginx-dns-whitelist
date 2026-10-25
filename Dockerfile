@@ -1,7 +1,7 @@
 FROM alpine:3.24
 
-# bash, cron, dig, jq, curl, tzdata
-RUN apk add --no-cache bash busybox-suid bind-tools jq curl tzdata
+# upgrade base packages, then bash, cron, dig, jq, curl, tzdata
+RUN apk upgrade --no-cache && apk add --no-cache bash busybox-suid bind-tools jq curl tzdata
 
 WORKDIR /app
 COPY docker/update-whitelists.sh /app/update-whitelists.sh
